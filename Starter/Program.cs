@@ -33,7 +33,7 @@ string currentStudentLetterGrade = "";
 
 // display the header row for scores/grades
 Console.Clear();
-Console.WriteLine("Student\t\tGrade\tLetter Grade\n");
+Console.WriteLine("Student\t\tExam Escore\tOverall\tGrade\tExtra Credit\n");
 
 /*
 The outer foreach loop is used to:
@@ -61,9 +61,19 @@ foreach (string name in studentNames)
 
     int sumAssignmentScores = 0;
 
-    decimal currentStudentGrade = 0;
+    int sumAssignamentExamScores = 0;
+
+    int sumAssignamentExtraScores = 0;
 
     int gradedAssignments = 0;
+
+    int extraCredit = 0;
+    
+    decimal currentStudentGrade = 0;
+
+    decimal examScore = 0;
+
+    decimal extraCreditPoints = 0;
 
     /* 
     the inner foreach loop sums assignment scores
@@ -71,17 +81,27 @@ foreach (string name in studentNames)
     */
     foreach (int score in studentScores)
     {
+
         gradedAssignments += 1;
 
         if (gradedAssignments <= examAssignments)
-            sumAssignmentScores += score;
+            sumAssignamentExamScores += score;
 
         else
-            sumAssignmentScores += score / 10;
+            extraCredit += score;
+            sumAssignamentExtraScores += score / 10;
     }
 
-    currentStudentGrade = (decimal)(sumAssignmentScores) / examAssignments;
+    sumAssignmentScores = sumAssignamentExamScores + sumAssignamentExtraScores;
 
+    examScore = (decimal)sumAssignamentExamScores / examAssignments;
+
+    extraCreditPoints = (decimal)(extraCredit * 0.10) / examAssignments;
+
+    extraCredit /= studentScores.Length - examAssignments;
+    
+    currentStudentGrade = examScore + extraCreditPoints;
+    
     if (currentStudentGrade >= 97)
         currentStudentLetterGrade = "A+";
 
@@ -124,7 +144,7 @@ foreach (string name in studentNames)
     // Student         Grade
     // Sophia:         92.2    A-
     
-    Console.WriteLine($"{currentStudent}\t\t{currentStudentGrade}\t{currentStudentLetterGrade}");
+    Console.WriteLine($"{currentStudent}\t\t{examScore}\t\t{currentStudentGrade}\t{currentStudentLetterGrade}\t{extraCredit} ({extraCreditPoints} pts)");
 }
 
 // required for running in VS Code (keeps the Output windows open to view results)
